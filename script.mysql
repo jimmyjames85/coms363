@@ -1,0 +1,201 @@
+DROP TABLE Enrollment;
+DROP TABLE Offering;
+DROP TABLE Course;
+DROP TABLE Student;
+DROP TABLE Instructor;
+DROP TABLE Person;
+
+
+SHOW TABLES;
+
+#####################################################################
+#Person (Name, ID, Address, DOB) 
+#####################################################################
+
+CREATE TABLE Person 
+(
+ Name CHAR (20),
+ ID CHAR (9) NOT NULL,
+ Address CHAR (30),
+ DOB DATE,
+ PRIMARY KEY (ID)
+)ENGINE=InnoDB;
+
+#####################################################################
+#Instructor (InstructorID, Rank, Salary) 
+#####################################################################
+
+CREATE TABLE Instructor
+(
+ InstructorID CHAR (9) NOT NULL,
+ Rank CHAR (12),
+ Salary INT,
+ PRIMARY KEY (InstructorID),
+ FOREIGN KEY (InstructorID) REFERENCES Person(ID)
+)ENGINE=InnoDB;
+
+#####################################################################
+#Student (StudentID, Classification, GPA, MentorID, CreditHours) 
+#####################################################################
+
+CREATE TABLE Student 
+(
+ StudentID CHAR (9) NOT NULL,
+ Classification CHAR (10),
+ GPA DOUBLE,
+ MentorID CHAR (9),
+ CreditHours INT,
+ PRIMARY KEY (StudentID),
+ FOREIGN KEY (StudentID) REFERENCES Person(ID),
+ FOREIGN KEY (MentorID) REFERENCES Instructor(InstructorID)
+)ENGINE=InnoDB;
+
+#####################################################################
+#Course (CourseCode, CourseName, PreReq) 
+#####################################################################
+
+CREATE TABLE Course 
+(
+ CourseCode CHAR (6) NOT NULL,
+ CourseName CHAR (50),
+ PreReq CHAR (6) DEFAULT 'None',
+ PRIMARY KEY (CourseCode, PreReq)
+)ENGINE=InnoDB;
+
+#####################################################################
+#Offering (CourseCode, SectionNo, InstructorID)
+#####################################################################
+
+CREATE TABLE Offering
+(
+ CourseCode CHAR (6) NOT NULL,
+ SectionNo INT NOT NULL,
+ InstructorID CHAR (9) NOT NULL,
+ PRIMARY KEY (CourseCode, SectionNo),
+ FOREIGN KEY (CourseCode) REFERENCES Course(CourseCode),
+ FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)
+)ENGINE=InnoDB;
+
+#####################################################################
+#Enrollment (CourseCode, SectionNo, StudentID, Grade) 
+#####################################################################
+
+CREATE TABLE Enrollment
+(
+ CourseCode CHAR (6) NOT NULL,
+ SectionNo INT NOT NULL,
+ StudentID CHAR (9) NOT NULL,
+ Grade CHAR (4) NOT NULL,
+ PRIMARY KEY (CourseCode, StudentID),
+ FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+ FOREIGN KEY (CourseCode, SectionNo) REFERENCES Offering(CourseCode, SectionNo)
+ FOREIGN KEY (SectionNo) REFERENCES Offering
+)ENGINE=InnoDB;
+
+#####################################################################
+#####################################################################
+
+SHOW TABLES;
+
+###################
+
+#Item 13 List the IDs of students and the IDs of their Mentors for students who are junior or senior having a GPA above 3.8. 
+SELECT StudentID, MentorID FROM Student WHERE GPA > 3.8 AND Classification IN('Junior','Senior');
+
+#Item 14. List the distinct course codes and sections for courses that are being taken by sophomore. 
+SELECT DISTINCT e.CourseCode, e.SectionNo FROM Enrollment e JOIN Student s ON e.StudentId=s.StudentId WHERE s.Classification='Sophomore';
+
+#Item 15. List the name and salary for mentors of all freshmen. 
+SELECT DISTINCT p.Name, i.Salary FROM Person p JOIN Instructor i ON p.ID=i.InstructorID JOIN Student s ON s.MentorID=i.InstructorID WHERE s.Classification='Freshman'; 
+
+#Item 16. Find the total salary of all instructors who are not offering any course.
+SELECT SUM(i.Salary) FROM Instructor i LEFT JOIN Offering o ON i.InstructorID=o.InstructorID WHERE SectionNo IS NULL;
+
+#Item 17. List all the names and DOBs of students who were born in 1976. The expression "Year(x.DOB) = 1976", checks if x is born in the year 1976. 
+SELECT Name, DOB FROM Person WHERE Year(Person.DOB) = 1976;
+
+#Item 18. List the names and rank of instructors who neither offer a course nor mentor a student.
+(SELECT i.InstructorID FROM Instructor i WHERE i.InstructorID NOT IN (SELECT s.MentorID FROM Student s)) UNION ( SELECT i.InstructorID FROM Instructor i WHERE i.InstructorID NOT IN (SELECT o.InstructorID FROM Offering o) );
+
+#Item 19. Find the IDs, names and DOB of the youngest student(s).
+SELECT p.ID, p.Name, p.DOB FROM Person p WHERE p.ID IN (SELECT s.StudentID FROM Student s) ORDER BY p.DOB DESC;
+
+#Item 20. List the IDs, DOB, and Names of Persons who are neither a student nor a instructor.
+SELECT p.ID FROM Person p WHERE p.ID NOT IN (SELECT i.InstructorID AS ID FROM Instructor i) AND p.ID NOT IN (SELECT s.StudentID AS ID FROM Student s);
+
+#Item 21. For each instructor list his / her name and the number of students he / she mentors.
+SELECT i.InstructorID, COUNT(s.MentorID) AS numberOfMentees FROM (Instructor i INNER JOIN Student s ON i.InstructorID=s.MentorID) GROUP BY s.MentorID HAVING COUNT(s.MentorID)>0;
+
+#Item 22. List the number of students and average GPA for each classification. Your query should not use constants such as "Freshman".
+SELECT Classification, AVG(GPA) AS "Average GPA" FROM Student GROUP BY Classification;
+
+#Item 23. Report the course(s) with lowest enrollments. You should output the course code and the number of enrollments. 
+SELECT CourseCode, COUNT(StudentID) As EnrollmentCount FROM Enrollment GROUP BY CourseCode ORDER BY EnrollmentCount ASC;
+
+#Item 24. List the IDs and Mentor IDs of students who are taking some course, offered by their mentor. 
+#REDO THIS ONE
+SELECT distinct pi.Name, ps.Name, s.StudentID, s.MentorID FROM Enrollment e JOIN Student s ON s.StudentID=e.StudentID JOIN Offering o ON o.CourseCode=e.CourseCode AND o.SectionNo=e.SectionNo JOIN Person ps ON ps.ID=s.StudentID JOIN Person pi ON pi.ID=s.MentorID WHERE s.MentorID=o.InstructorID;
+
+#Item 25. List the student id, name, and completed credit hours of all freshman born in or after 1976. 
+SELECT s.StudentID, p.Name, s.CreditHours FROM Student s JOIN Person p ON p.ID=s.StudentID WHERE YEAR(p.DOB) > 1976 AND s.Classification='Freshman' ;
+
+#Item 26. 
+#Insert following information in the database:
+#Student name: Briggs Jason
+#ID: 480293439
+#address: 215, North Hyland Avenue
+#DOB: 15th January 1975
+#Junior
+#GPA 3.48
+#75 credit hours
+#MentorID= InstructorID 201586985
+#2 courses CS311 Section 2 and CS330 Section 1.
+#He has an A in CS311 and an A- in CS330.
+
+INSERT INTO Person (Name, ID, Address, DOB) VALUES ('Jason Briggs', "480293439", "215, North Hyland Avenu", DATE('1975-01-15'));
+INSERT INTO Student (StudentID, Classification, GPA, MentorID, CreditHours) VALUES ('480293439','Junior',3.48, '201586985',75);
+INSERT INTO Enrollment (CourseCode, SectionNo, StudentID, Grade) VALUES ('CS311', 2, '480293439', 'A');
+INSERT INTO Enrollment (CourseCode, SectionNo, StudentID, Grade) VALUES ('CS330', 1, '480293439', 'A-');
+
+SELECT * FROM Person P WHERE P.Name='Briggs Jason';
+SELECT * FROM Student S WHERE S.StudentID='480293439';
+SELECT * FROM Enrollment E WHERE E.StudentID = '480293439';
+
+#Item 27. Next, delete the records of students from the database who have a GPA less than 0.5. Note that it is not sufficient to delete these records from Student table; you have to delete them from the Enrollment table first. (Why?) On the  other hand, do not delete these students from the Person table.
+DELETE FROM Enrollment WHERE StudentID IN (SELECT s.StudentID FROM Student s WHERE s.GPA < 0.5 );
+DELETE FROM Student WHERE GPA < 0.5;
+
+SELECT * FROM Student S WHERE S.GPA < 0.5;
+
+#Item 28. In this part you update the Instructor table.
+#To confirm the update, you execute two queries before and after making the update.
+#First, execute the SQL query statements that are given below.
+
+SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Ricky Ponting';
+SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Darren Lehmann';
+
+#For instructors, Ricky Ponting and Darren Lehmann, 
+#If they have five or more students whose GPA is greater than 3.0, then raise their Salary by 10%
+
+#All instructors and student count by sectionNo
+select p.Name, COUNT(p.Name), c.CourseName, o.SectionNo from Enrollment e, Course c, Offering o, Person p Where o.InstructorID=p.ID AND o.CourseCode=c.CourseCode AND e.CourseCode=o.CourseCode AND e.SectionNo=o.SectionNo GROUP BY Name, CourseName, SectionNo;
+
+#instructor and gpa>3 count
+SELECT pi.Name, COUNT(s.GPA), COUNT(ps.Name) FROM Enrollment e JOIN Student s ON e.StudentID=s.StudentID JOIN Offering o ON o.SectionNo=e.SectionNo AND o.CourseCode=e.CourseCode JOIN Person ps ON ps.ID=s.StudentID JOIN Person pi ON pi.ID=o.InstructorID WHERE s.GPA>3.0 GROUP BY pi.Name ;
+
+#THIS ISN'T RIGHT!!!!!!!!!!
+SELECT  pi.Name, i.Salary, COUNT(s.GPA) AS '# of Students with GPA > 3.0', COUNT(ps.Name) FROM Enrollment e JOIN Student s ON e.StudentID=s.StudentID JOIN Offering o ON o.SectionNo=e.SectionNo AND o.CourseCode=e.CourseCode JOIN Person ps ON ps.ID=s.StudentID JOIN Person pi ON pi.ID=o.InstructorID JOIN Instructor i ON i.InstructorID=o.InstructorID WHERE s.GPA>3.9999999 GROUP BY pi.Name ;
+
+
+SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Ricky Ponting';
+SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Darren Lehmann';
+
+
+#$MySQL:>connect;
+#$MySQL:> load | Person | ComS363/Projects/Datasets/University_Dataset.xml;
+#$MySQL:> load | Instructor | ComS363/Projects/Datasets/University_Dataset.xml;
+#$MySQL:> load | Student | ComS363/Projects/Datasets/University_Dataset.xml;
+#$MySQL:> load | Course | ComS363/Projects/Datasets/University_Dataset.xml;
+#$MySQL:> load | Offering | ComS363/Projects/Datasets/University_Dataset.xml;
+#$MySQL:> load | Enrollment | ComS363/Projects/Datasets/University_Dataset.xml;
+#$MySQL:>disconnect;
