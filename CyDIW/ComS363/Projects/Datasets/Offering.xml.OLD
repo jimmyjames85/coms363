@@ -3,76 +3,76 @@
   <Offering>
     <CourseCode>CS227</CourseCode>
     <SectionNo>1</SectionNo>
-    <InstructorFacultyID>201586985</InstructorFacultyID>
+    <InstructorID>201586985</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS228</CourseCode>
     <SectionNo>1</SectionNo>
-    <InstructorFacultyID>201586985</InstructorFacultyID>
+    <InstructorID>201586985</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS309</CourseCode>
     <SectionNo>1</SectionNo>
-    <InstructorFacultyID>386167477</InstructorFacultyID>
+    <InstructorID>386167477</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS311</CourseCode>
     <SectionNo>1</SectionNo>
-    <InstructorFacultyID>386167477</InstructorFacultyID>
+    <InstructorID>386167477</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS311</CourseCode>
     <SectionNo>2</SectionNo>
-    <InstructorFacultyID>463249547</InstructorFacultyID>
+    <InstructorID>463249547</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS321</CourseCode>
     <SectionNo>1</SectionNo>
-    <InstructorFacultyID>685744439</InstructorFacultyID>
+    <InstructorID>685744439</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS330</CourseCode>
     <SectionNo>1</SectionNo>
-    <InstructorFacultyID>696335701</InstructorFacultyID>
+    <InstructorID>696335701</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS331</CourseCode>
     <SectionNo>2</SectionNo>
-    <InstructorFacultyID>696335701</InstructorFacultyID>
+    <InstructorID>696335701</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS342</CourseCode>
     <SectionNo>1</SectionNo>
-    <InstructorFacultyID>696335701</InstructorFacultyID>
+    <InstructorID>696335701</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS342</CourseCode>
     <SectionNo>2</SectionNo>
-    <InstructorFacultyID>836826630</InstructorFacultyID>
+    <InstructorID>836826630</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS352</CourseCode>
     <SectionNo>1</SectionNo>
-    <InstructorFacultyID>836826630</InstructorFacultyID>
+    <InstructorID>836826630</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS352</CourseCode>
     <SectionNo>2</SectionNo>
-    <InstructorFacultyID>961874958</InstructorFacultyID>
+    <InstructorID>961874958</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS363</CourseCode>
     <SectionNo>2</SectionNo>
-    <InstructorFacultyID>961874958</InstructorFacultyID>
+    <InstructorID>961874958</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS461</CourseCode>
     <SectionNo>2</SectionNo>
-    <InstructorFacultyID>997111094</InstructorFacultyID>
+    <InstructorID>997111094</InstructorID>
   </Offering>
   <Offering>
     <CourseCode>CS511</CourseCode>
     <SectionNo>2</SectionNo>
-    <InstructorFacultyID>997111094</InstructorFacultyID>
+    <InstructorID>997111094</InstructorID>
   </Offering>
 </Offerings>

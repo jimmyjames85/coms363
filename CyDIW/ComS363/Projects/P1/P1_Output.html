@@ -1,0 +1,2670 @@
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <pre><font color="blue" size="3pt"><span>$MySQL:&gt;connect;</span></font><br>The connection to the SQL database is established!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;CREATE TABLE Person 
+(
+ Name CHAR (20),
+ ID CHAR (9) NOT NULL,
+ Address CHAR (30),
+ DOB DATE,
+ PRIMARY KEY (ID)
+)ENGINE=InnoDB;</font></span><br>The query is executed successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;CREATE TABLE Instructor
+(
+ InstructorID CHAR (9) NOT NULL,
+ Rank CHAR (12),
+ Salary INT,
+ PRIMARY KEY (InstructorID),
+ FOREIGN KEY (InstructorID) REFERENCES Person(ID)
+)ENGINE=InnoDB;</font></span><br>The query is executed successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;CREATE TABLE Student 
+(
+ StudentID CHAR (9) NOT NULL,
+ Classification CHAR (10),
+ GPA DOUBLE,
+ MentorID CHAR (9),
+ CreditHours INT,
+ PRIMARY KEY (StudentID),
+ FOREIGN KEY (StudentID) REFERENCES Person(ID),
+ FOREIGN KEY (MentorID) REFERENCES Instructor(InstructorID)
+)ENGINE=InnoDB;</font></span><br>The query is executed successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;CREATE TABLE Course 
+(
+ CourseCode CHAR (6) NOT NULL,
+ CourseName CHAR (50),
+ PreReq CHAR (6) DEFAULT 'None',
+ PRIMARY KEY (CourseCode, PreReq)
+)ENGINE=InnoDB;</font></span><br>The query is executed successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;CREATE TABLE Offering
+(
+ CourseCode CHAR (6) NOT NULL,
+ SectionNo INT NOT NULL,
+ InstructorID CHAR (9) NOT NULL,
+ PRIMARY KEY (CourseCode, SectionNo),
+ FOREIGN KEY (CourseCode) REFERENCES Course(CourseCode),
+ FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)
+)ENGINE=InnoDB;</font></span><br>The query is executed successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;CREATE TABLE Enrollment
+(
+ CourseCode CHAR (6) NOT NULL,
+ SectionNo INT NOT NULL,
+ StudentID CHAR (9) NOT NULL,
+ Grade CHAR (4) NOT NULL,
+ PRIMARY KEY (CourseCode, StudentID),
+ FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+ FOREIGN KEY (CourseCode, SectionNo) REFERENCES Offering(CourseCode, SectionNo)
+)ENGINE=InnoDB;</font></span><br>The query is executed successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt; load | Person | ComS363/Projects/Datasets/University_Dataset.xml;</font></span><br>The relation &quot;Person&quot; is loaded successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt; load | Instructor | ComS363/Projects/Datasets/University_Dataset.xml;</font></span><br>The relation &quot;Instructor&quot; is loaded successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt; load | Student | ComS363/Projects/Datasets/University_Dataset.xml;</font></span><br>The relation &quot;Student&quot; is loaded successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt; load | Course | ComS363/Projects/Datasets/University_Dataset.xml;</font></span><br>The relation &quot;Course&quot; is loaded successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt; load | Offering | ComS363/Projects/Datasets/University_Dataset.xml;</font></span><br>The relation &quot;Offering&quot; is loaded successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt; load | Enrollment | ComS363/Projects/Datasets/University_Dataset.xml;</font></span><br>The relation &quot;Enrollment&quot; is loaded successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;SHOW TABLES;</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          Tables_in_jmtappeDB
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Course
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Enrollment
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Instructor
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Offering
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Person
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Student
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT StudentID, MentorID FROM Student WHERE GPA &gt; 3.8 AND Classification IN('Junior','Senior');</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          StudentID
+        </th>
+        <th>
+          MentorID
+        </th>
+      </tr>
+      <tr>
+        <td>
+          164500920
+        </td>
+        <td>
+          201586985
+        </td>
+      </tr>
+      <tr>
+        <td>
+          164776911
+        </td>
+        <td>
+          201586985
+        </td>
+      </tr>
+      <tr>
+        <td>
+          191083779
+        </td>
+        <td>
+          685744439
+        </td>
+      </tr>
+      <tr>
+        <td>
+          419180204
+        </td>
+        <td>
+          466388906
+        </td>
+      </tr>
+      <tr>
+        <td>
+          466094162
+        </td>
+        <td>
+          555010131
+        </td>
+      </tr>
+      <tr>
+        <td>
+          483727101
+        </td>
+        <td>
+          201586985
+        </td>
+      </tr>
+      <tr>
+        <td>
+          664353912
+        </td>
+        <td>
+          466388906
+        </td>
+      </tr>
+      <tr>
+        <td>
+          696302689
+        </td>
+        <td>
+          463249547
+        </td>
+      </tr>
+      <tr>
+        <td>
+          712952591
+        </td>
+        <td>
+          463249547
+        </td>
+      </tr>
+      <tr>
+        <td>
+          722131306
+        </td>
+        <td>
+          201586985
+        </td>
+      </tr>
+      <tr>
+        <td>
+          812073765
+        </td>
+        <td>
+          386167477
+        </td>
+      </tr>
+      <tr>
+        <td>
+          867910658
+        </td>
+        <td>
+          386167477
+        </td>
+      </tr>
+      <tr>
+        <td>
+          916916939
+        </td>
+        <td>
+          696335701
+        </td>
+      </tr>
+      <tr>
+        <td>
+          956234659
+        </td>
+        <td>
+          997111094
+        </td>
+      </tr>
+      <tr>
+        <td>
+          965882492
+        </td>
+        <td>
+          961874958
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT DISTINCT e.CourseCode, e.SectionNo FROM Enrollment e JOIN Student s ON e.StudentId=s.StudentId WHERE s.Classification='Sophomore';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          CourseCode
+        </th>
+        <th>
+          SectionNo
+        </th>
+      </tr>
+      <tr>
+        <td>
+          CS321
+        </td>
+        <td>
+          1
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS342
+        </td>
+        <td>
+          1
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS227
+        </td>
+        <td>
+          1
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS228
+        </td>
+        <td>
+          1
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS461
+        </td>
+        <td>
+          2
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS309
+        </td>
+        <td>
+          1
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS311
+        </td>
+        <td>
+          2
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS311
+        </td>
+        <td>
+          1
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS330
+        </td>
+        <td>
+          1
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS352
+        </td>
+        <td>
+          1
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS342
+        </td>
+        <td>
+          2
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS363
+        </td>
+        <td>
+          2
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS511
+        </td>
+        <td>
+          2
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS331
+        </td>
+        <td>
+          2
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT DISTINCT p.Name, i.Salary FROM Person p JOIN Instructor i ON p.ID=i.InstructorID JOIN Student s ON s.MentorID=i.InstructorID WHERE s.Classification='Freshman';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Salary
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Min Tuyet
+        </td>
+        <td>
+          120000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Seth Carney
+        </td>
+        <td>
+          100000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Chad Moore
+        </td>
+        <td>
+          100000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Darren Lehmann
+        </td>
+        <td>
+          80000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Graeme Dilly
+        </td>
+        <td>
+          120000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          John Bracewell
+        </td>
+        <td>
+          100000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Gavin Larson
+        </td>
+        <td>
+          80000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Philip Richards
+        </td>
+        <td>
+          80000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Ricky Ponting
+        </td>
+        <td>
+          120000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Richard Ellison
+        </td>
+        <td>
+          100000
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT SUM(i.Salary) FROM Instructor i LEFT JOIN Offering o ON i.InstructorID=o.InstructorID WHERE SectionNo IS NULL;</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          SUM(i.Salary)
+        </th>
+      </tr>
+      <tr>
+        <td>
+          200000
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT Name, DOB FROM Person WHERE Year(Person.DOB) = 1976;</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          DOB
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Jinchao Henson
+        </td>
+        <td>
+          1976-07-24
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Daniel Woo
+        </td>
+        <td>
+          1976-03-12
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Jason Huang
+        </td>
+        <td>
+          1976-09-30
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Min Tuyet
+        </td>
+        <td>
+          1976-12-03
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Brian Stumpf
+        </td>
+        <td>
+          1976-09-01
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Adam Lee
+        </td>
+        <td>
+          1976-01-09
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Lin Zhou
+        </td>
+        <td>
+          1976-11-30
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Aaron Newman
+        </td>
+        <td>
+          1976-03-14
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Wen White
+        </td>
+        <td>
+          1976-04-11
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Lee Andrews
+        </td>
+        <td>
+          1976-05-13
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Wee Tuyet
+        </td>
+        <td>
+          1976-06-01
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Scot Lee
+        </td>
+        <td>
+          1976-02-14
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Dennis Fletcher
+        </td>
+        <td>
+          1976-10-11
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Eric Loader
+        </td>
+        <td>
+          1976-05-18
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Jim Slater
+        </td>
+        <td>
+          1976-12-25
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Neil Foster
+        </td>
+        <td>
+          1976-08-03
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Jan Austin
+        </td>
+        <td>
+          1976-03-10
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Chris Cairns
+        </td>
+        <td>
+          1976-10-17
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Juan Rodriguez
+        </td>
+        <td>
+          1976-05-24
+        </td>
+      </tr>
+      <tr>
+        <td>
+          John Freeman
+        </td>
+        <td>
+          1976-12-31
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Greg Blewett
+        </td>
+        <td>
+          1976-07-07
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Kepler Wessels
+        </td>
+        <td>
+          1976-02-14
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;(SELECT i.InstructorID FROM Instructor i WHERE i.InstructorID NOT IN (SELECT s.MentorID FROM Student s)) UNION ( SELECT i.InstructorID FROM Instructor i WHERE i.InstructorID NOT IN (SELECT o.InstructorID FROM Offering o) );</font></span><br>The query is executed successfully!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;SELECT p.ID, p.Name, p.DOB FROM Person p WHERE p.ID IN (SELECT s.StudentID FROM Student s) ORDER BY p.DOB DESC;</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          ID
+        </th>
+        <th>
+          Name
+        </th>
+        <th>
+          DOB
+        </th>
+      </tr>
+      <tr>
+        <td>
+          737972250
+        </td>
+        <td>
+          Deepak Patel
+        </td>
+        <td>
+          1978-12-19
+        </td>
+      </tr>
+      <tr>
+        <td>
+          387215322
+        </td>
+        <td>
+          Colleen Good
+        </td>
+        <td>
+          1978-12-13
+        </td>
+      </tr>
+      <tr>
+        <td>
+          191083779
+        </td>
+        <td>
+          Sameer Shah
+        </td>
+        <td>
+          1978-09-15
+        </td>
+      </tr>
+      <tr>
+        <td>
+          905922853
+        </td>
+        <td>
+          Shaun Elliot
+        </td>
+        <td>
+          1978-09-09
+        </td>
+      </tr>
+      <tr>
+        <td>
+          787422802
+        </td>
+        <td>
+          Vikram Solanki
+        </td>
+        <td>
+          1978-07-26
+        </td>
+      </tr>
+      <tr>
+        <td>
+          466094162
+        </td>
+        <td>
+          Stumpf Andrews
+        </td>
+        <td>
+          1978-07-20
+        </td>
+      </tr>
+      <tr>
+        <td>
+          658579865
+        </td>
+        <td>
+          Jeremy Koney
+        </td>
+        <td>
+          1978-05-12
+        </td>
+      </tr>
+      <tr>
+        <td>
+          985954783
+        </td>
+        <td>
+          Chris Pringle
+        </td>
+        <td>
+          1978-04-16
+        </td>
+      </tr>
+      <tr>
+        <td>
+          490649143
+        </td>
+        <td>
+          Naseer Hussain
+        </td>
+        <td>
+          1978-02-27
+        </td>
+      </tr>
+      <tr>
+        <td>
+          222105935
+        </td>
+        <td>
+          Wee Wang
+        </td>
+        <td>
+          1978-01-12
+        </td>
+      </tr>
+      <tr>
+        <td>
+          163728111
+        </td>
+        <td>
+          Todd Lu
+        </td>
+        <td>
+          1977-12-12
+        </td>
+      </tr>
+      <tr>
+        <td>
+          722131306
+        </td>
+        <td>
+          Glen Turner
+        </td>
+        <td>
+          1977-11-18
+        </td>
+      </tr>
+      <tr>
+        <td>
+          550658107
+        </td>
+        <td>
+          Neil Radford
+        </td>
+        <td>
+          1977-09-04
+        </td>
+      </tr>
+      <tr>
+        <td>
+          885469446
+        </td>
+        <td>
+          John Matthews
+        </td>
+        <td>
+          1977-08-08
+        </td>
+      </tr>
+      <tr>
+        <td>
+          785811329
+        </td>
+        <td>
+          Marcus Trescothick
+        </td>
+        <td>
+          1977-06-25
+        </td>
+      </tr>
+      <tr>
+        <td>
+          644488789
+        </td>
+        <td>
+          Dave Whatmore
+        </td>
+        <td>
+          1977-04-11
+        </td>
+      </tr>
+      <tr>
+        <td>
+          328718420
+        </td>
+        <td>
+          Colleen Parcher
+        </td>
+        <td>
+          1977-04-05
+        </td>
+      </tr>
+      <tr>
+        <td>
+          980102825
+        </td>
+        <td>
+          Peter Kirsten
+        </td>
+        <td>
+          1977-03-15
+        </td>
+      </tr>
+      <tr>
+        <td>
+          285719425
+        </td>
+        <td>
+          Chee Yang
+        </td>
+        <td>
+          1977-03-04
+        </td>
+      </tr>
+      <tr>
+        <td>
+          485619193
+        </td>
+        <td>
+          Daniel Hayden
+        </td>
+        <td>
+          1977-01-26
+        </td>
+      </tr>
+      <tr>
+        <td>
+          831142613
+        </td>
+        <td>
+          John Freeman
+        </td>
+        <td>
+          1976-12-31
+        </td>
+      </tr>
+      <tr>
+        <td>
+          483727101
+        </td>
+        <td>
+          Jim Slater
+        </td>
+        <td>
+          1976-12-25
+        </td>
+      </tr>
+      <tr>
+        <td>
+          232820149
+        </td>
+        <td>
+          Lin Zhou
+        </td>
+        <td>
+          1976-11-30
+        </td>
+      </tr>
+      <tr>
+        <td>
+          712952591
+        </td>
+        <td>
+          Chris Cairns
+        </td>
+        <td>
+          1976-10-17
+        </td>
+      </tr>
+      <tr>
+        <td>
+          382109560
+        </td>
+        <td>
+          Dennis Fletcher
+        </td>
+        <td>
+          1976-10-11
+        </td>
+      </tr>
+      <tr>
+        <td>
+          164776911
+        </td>
+        <td>
+          Jason Huang
+        </td>
+        <td>
+          1976-09-30
+        </td>
+      </tr>
+      <tr>
+        <td>
+          203745018
+        </td>
+        <td>
+          Brian Stumpf
+        </td>
+        <td>
+          1976-09-01
+        </td>
+      </tr>
+      <tr>
+        <td>
+          118784412
+        </td>
+        <td>
+          Jinchao Henson
+        </td>
+        <td>
+          1976-07-24
+        </td>
+      </tr>
+      <tr>
+        <td>
+          876550324
+        </td>
+        <td>
+          Greg Blewett
+        </td>
+        <td>
+          1976-07-07
+        </td>
+      </tr>
+      <tr>
+        <td>
+          296669559
+        </td>
+        <td>
+          Wee Tuyet
+        </td>
+        <td>
+          1976-06-01
+        </td>
+      </tr>
+      <tr>
+        <td>
+          785273479
+        </td>
+        <td>
+          Juan Rodriguez
+        </td>
+        <td>
+          1976-05-24
+        </td>
+      </tr>
+      <tr>
+        <td>
+          432180765
+        </td>
+        <td>
+          Eric Loader
+        </td>
+        <td>
+          1976-05-18
+        </td>
+      </tr>
+      <tr>
+        <td>
+          273277984
+        </td>
+        <td>
+          Lee Andrews
+        </td>
+        <td>
+          1976-05-13
+        </td>
+      </tr>
+      <tr>
+        <td>
+          271978135
+        </td>
+        <td>
+          Wen White
+        </td>
+        <td>
+          1976-04-11
+        </td>
+      </tr>
+      <tr>
+        <td>
+          131838016
+        </td>
+        <td>
+          Daniel Woo
+        </td>
+        <td>
+          1976-03-12
+        </td>
+      </tr>
+      <tr>
+        <td>
+          636596145
+        </td>
+        <td>
+          Jan Austin
+        </td>
+        <td>
+          1976-03-10
+        </td>
+      </tr>
+      <tr>
+        <td>
+          973071948
+        </td>
+        <td>
+          Kepler Wessels
+        </td>
+        <td>
+          1976-02-14
+        </td>
+      </tr>
+      <tr>
+        <td>
+          308635036
+        </td>
+        <td>
+          Scot Lee
+        </td>
+        <td>
+          1976-02-14
+        </td>
+      </tr>
+      <tr>
+        <td>
+          812073765
+        </td>
+        <td>
+          Martin Vasquez
+        </td>
+        <td>
+          1975-11-30
+        </td>
+      </tr>
+      <tr>
+        <td>
+          483223789
+        </td>
+        <td>
+          Jan Harvey
+        </td>
+        <td>
+          1975-11-24
+        </td>
+      </tr>
+      <tr>
+        <td>
+          170815037
+        </td>
+        <td>
+          Yeow Huang
+        </td>
+        <td>
+          1975-11-23
+        </td>
+      </tr>
+      <tr>
+        <td>
+          302335678
+        </td>
+        <td>
+          Eric Dennis
+        </td>
+        <td>
+          1975-11-12
+        </td>
+      </tr>
+      <tr>
+        <td>
+          712524758
+        </td>
+        <td>
+          Chris Harris
+        </td>
+        <td>
+          1975-09-16
+        </td>
+      </tr>
+      <tr>
+        <td>
+          365774792
+        </td>
+        <td>
+          William Yang
+        </td>
+        <td>
+          1975-09-10
+        </td>
+      </tr>
+      <tr>
+        <td>
+          164500920
+        </td>
+        <td>
+          Omar Shahnawaz
+        </td>
+        <td>
+          1975-08-28
+        </td>
+      </tr>
+      <tr>
+        <td>
+          513729696
+        </td>
+        <td>
+          Barry Pollock
+        </td>
+        <td>
+          1975-07-02
+        </td>
+      </tr>
+      <tr>
+        <td>
+          867910658
+        </td>
+        <td>
+          Justin Langer
+        </td>
+        <td>
+          1975-06-06
+        </td>
+      </tr>
+      <tr>
+        <td>
+          785103478
+        </td>
+        <td>
+          Jennifer Lowe
+        </td>
+        <td>
+          1975-04-23
+        </td>
+      </tr>
+      <tr>
+        <td>
+          419180204
+        </td>
+        <td>
+          Kerry Marks
+        </td>
+        <td>
+          1975-04-17
+        </td>
+      </tr>
+      <tr>
+        <td>
+          252533260
+        </td>
+        <td>
+          Eric Wang
+        </td>
+        <td>
+          1975-04-14
+        </td>
+      </tr>
+      <tr>
+        <td>
+          224620876
+        </td>
+        <td>
+          Feng Huang
+        </td>
+        <td>
+          1975-01-23
+        </td>
+      </tr>
+      <tr>
+        <td>
+          956234659
+        </td>
+        <td>
+          Tom Moody
+        </td>
+        <td>
+          1974-12-12
+        </td>
+      </tr>
+      <tr>
+        <td>
+          803024290
+        </td>
+        <td>
+          Rud Gullit
+        </td>
+        <td>
+          1974-10-29
+        </td>
+      </tr>
+      <tr>
+        <td>
+          477453864
+        </td>
+        <td>
+          Brett Lee
+        </td>
+        <td>
+          1974-10-23
+        </td>
+      </tr>
+      <tr>
+        <td>
+          261812056
+        </td>
+        <td>
+          Jason Carney
+        </td>
+        <td>
+          1974-09-30
+        </td>
+      </tr>
+      <tr>
+        <td>
+          212976207
+        </td>
+        <td>
+          Jason Newman
+        </td>
+        <td>
+          1974-09-28
+        </td>
+      </tr>
+      <tr>
+        <td>
+          363200537
+        </td>
+        <td>
+          Wee Whitteney
+        </td>
+        <td>
+          1974-08-09
+        </td>
+      </tr>
+      <tr>
+        <td>
+          124208644
+        </td>
+        <td>
+          John Basaraba
+        </td>
+        <td>
+          1974-06-07
+        </td>
+      </tr>
+      <tr>
+        <td>
+          513110141
+        </td>
+        <td>
+          Augustin Logie
+        </td>
+        <td>
+          1974-06-01
+        </td>
+      </tr>
+      <tr>
+        <td>
+          862952924
+        </td>
+        <td>
+          Gavin Robertson
+        </td>
+        <td>
+          1974-05-05
+        </td>
+      </tr>
+      <tr>
+        <td>
+          774885901
+        </td>
+        <td>
+          Barbara Potters
+        </td>
+        <td>
+          1974-03-22
+        </td>
+      </tr>
+      <tr>
+        <td>
+          315967897
+        </td>
+        <td>
+          Jialiang Jiang
+        </td>
+        <td>
+          1974-03-16
+        </td>
+      </tr>
+      <tr>
+        <td>
+          409508678
+        </td>
+        <td>
+          Golam Mohammad
+        </td>
+        <td>
+          1974-03-16
+        </td>
+      </tr>
+      <tr>
+        <td>
+          279702622
+        </td>
+        <td>
+          Zhen Messer
+        </td>
+        <td>
+          1974-03-13
+        </td>
+      </tr>
+      <tr>
+        <td>
+          601496044
+        </td>
+        <td>
+          Craig White
+        </td>
+        <td>
+          1974-01-08
+        </td>
+      </tr>
+      <tr>
+        <td>
+          590987789
+        </td>
+        <td>
+          Alex Tudor
+        </td>
+        <td>
+          1973-12-07
+        </td>
+      </tr>
+      <tr>
+        <td>
+          290986112
+        </td>
+        <td>
+          Golam Bagga
+        </td>
+        <td>
+          1973-12-03
+        </td>
+      </tr>
+      <tr>
+        <td>
+          260369148
+        </td>
+        <td>
+          Yanqiu Huang
+        </td>
+        <td>
+          1973-11-19
+        </td>
+      </tr>
+      <tr>
+        <td>
+          801166066
+        </td>
+        <td>
+          Alan Sherear
+        </td>
+        <td>
+          1973-09-28
+        </td>
+      </tr>
+      <tr>
+        <td>
+          467545237
+        </td>
+        <td>
+          Damien Martyn
+        </td>
+        <td>
+          1973-09-22
+        </td>
+      </tr>
+      <tr>
+        <td>
+          262891588
+        </td>
+        <td>
+          Randy Hellman
+        </td>
+        <td>
+          1973-09-13
+        </td>
+      </tr>
+      <tr>
+        <td>
+          696302689
+        </td>
+        <td>
+          Martin Crowe
+        </td>
+        <td>
+          1973-07-14
+        </td>
+      </tr>
+      <tr>
+        <td>
+          340502961
+        </td>
+        <td>
+          Josh Woo
+        </td>
+        <td>
+          1973-07-08
+        </td>
+      </tr>
+      <tr>
+        <td>
+          996056608
+        </td>
+        <td>
+          Richard Snell
+        </td>
+        <td>
+          1973-06-18
+        </td>
+      </tr>
+      <tr>
+        <td>
+          501674545
+        </td>
+        <td>
+          Dennis Patten
+        </td>
+        <td>
+          1973-05-30
+        </td>
+      </tr>
+      <tr>
+        <td>
+          185141262
+        </td>
+        <td>
+          William Stumpf
+        </td>
+        <td>
+          1973-05-23
+        </td>
+      </tr>
+      <tr>
+        <td>
+          850631208
+        </td>
+        <td>
+          Robin Smith
+        </td>
+        <td>
+          1973-04-04
+        </td>
+      </tr>
+      <tr>
+        <td>
+          750913239
+        </td>
+        <td>
+          John Poweel
+        </td>
+        <td>
+          1973-02-21
+        </td>
+      </tr>
+      <tr>
+        <td>
+          406746417
+        </td>
+        <td>
+          Ryan Schmidt
+        </td>
+        <td>
+          1973-02-15
+        </td>
+      </tr>
+      <tr>
+        <td>
+          587735656
+        </td>
+        <td>
+          Wilf slack
+        </td>
+        <td>
+          1972-11-06
+        </td>
+      </tr>
+      <tr>
+        <td>
+          916916939
+        </td>
+        <td>
+          Alan Donald
+        </td>
+        <td>
+          1972-10-10
+        </td>
+      </tr>
+      <tr>
+        <td>
+          793034333
+        </td>
+        <td>
+          Ronnie Irani
+        </td>
+        <td>
+          1972-08-27
+        </td>
+      </tr>
+      <tr>
+        <td>
+          664353912
+        </td>
+        <td>
+          Merv Hughes
+        </td>
+        <td>
+          1972-06-13
+        </td>
+      </tr>
+      <tr>
+        <td>
+          332012037
+        </td>
+        <td>
+          Randy Lewis
+        </td>
+        <td>
+          1972-06-07
+        </td>
+      </tr>
+      <tr>
+        <td>
+          992485307
+        </td>
+        <td>
+          Craig Matthews
+        </td>
+        <td>
+          1972-05-17
+        </td>
+      </tr>
+      <tr>
+        <td>
+          500094214
+        </td>
+        <td>
+          Bradley Hoggs
+        </td>
+        <td>
+          1972-04-29
+        </td>
+      </tr>
+      <tr>
+        <td>
+          495490053
+        </td>
+        <td>
+          Michael Vaughan
+        </td>
+        <td>
+          1972-03-28
+        </td>
+      </tr>
+      <tr>
+        <td>
+          845037919
+        </td>
+        <td>
+          John Emburey
+        </td>
+        <td>
+          1972-03-03
+        </td>
+      </tr>
+      <tr>
+        <td>
+          143293833
+        </td>
+        <td>
+          Jamie Yang
+        </td>
+        <td>
+          1972-02-08
+        </td>
+      </tr>
+      <tr>
+        <td>
+          743991555
+        </td>
+        <td>
+          Aldin Baptist
+        </td>
+        <td>
+          1972-01-20
+        </td>
+      </tr>
+      <tr>
+        <td>
+          391910519
+        </td>
+        <td>
+          Ming Jiang
+        </td>
+        <td>
+          1972-01-14
+        </td>
+      </tr>
+      <tr>
+        <td>
+          930231660
+        </td>
+        <td>
+          David Boon
+        </td>
+        <td>
+          1965-07-04
+        </td>
+      </tr>
+      <tr>
+        <td>
+          909334701
+        </td>
+        <td>
+          Jacques Kallis
+        </td>
+        <td>
+          1964-02-27
+        </td>
+      </tr>
+      <tr>
+        <td>
+          901511548
+        </td>
+        <td>
+          Evan Chatfield
+        </td>
+        <td>
+          1963-03-04
+        </td>
+      </tr>
+      <tr>
+        <td>
+          965882492
+        </td>
+        <td>
+          Alan Border
+        </td>
+        <td>
+          1963-01-24
+        </td>
+      </tr>
+      <tr>
+        <td>
+          952145559
+        </td>
+        <td>
+          Dean Jones
+        </td>
+        <td>
+          1962-01-02
+        </td>
+      </tr>
+      <tr>
+        <td>
+          504013895
+        </td>
+        <td>
+          Philip Simmons
+        </td>
+        <td>
+          1960-11-12
+        </td>
+      </tr>
+      <tr>
+        <td>
+          449976666
+        </td>
+        <td>
+          Jun Wang
+        </td>
+        <td>
+          1956-09-15
+        </td>
+      </tr>
+      <tr>
+        <td>
+          895255243
+        </td>
+        <td>
+          Ray Bright
+        </td>
+        <td>
+          1955-12-11
+        </td>
+      </tr>
+      <tr>
+        <td>
+          907425648
+        </td>
+        <td>
+          Perminder Singh
+        </td>
+        <td>
+          1952-11-28
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT p.ID FROM Person p WHERE p.ID NOT IN (SELECT i.InstructorID AS ID FROM Instructor i) AND p.ID NOT IN (SELECT s.StudentID AS ID FROM Student s);</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          ID
+        </th>
+      </tr>
+      <tr>
+        <td>
+          115423723
+        </td>
+      </tr>
+      <tr>
+        <td>
+          120308944
+        </td>
+      </tr>
+      <tr>
+        <td>
+          126544126
+        </td>
+      </tr>
+      <tr>
+        <td>
+          221157745
+        </td>
+      </tr>
+      <tr>
+        <td>
+          259028125
+        </td>
+      </tr>
+      <tr>
+        <td>
+          330260152
+        </td>
+      </tr>
+      <tr>
+        <td>
+          547083692
+        </td>
+      </tr>
+      <tr>
+        <td>
+          616740646
+        </td>
+      </tr>
+      <tr>
+        <td>
+          839437833
+        </td>
+      </tr>
+      <tr>
+        <td>
+          924248824
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT i.InstructorID, COUNT(s.MentorID) AS numberOfMentees FROM (Instructor i INNER JOIN Student s ON i.InstructorID=s.MentorID) GROUP BY s.MentorID HAVING COUNT(s.MentorID)&gt;0;</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          InstructorID
+        </th>
+        <th>
+          numberOfMentees
+        </th>
+      </tr>
+      <tr>
+        <td>
+          201586985
+        </td>
+        <td>
+          10
+        </td>
+      </tr>
+      <tr>
+        <td>
+          386167477
+        </td>
+        <td>
+          9
+        </td>
+      </tr>
+      <tr>
+        <td>
+          463249547
+        </td>
+        <td>
+          13
+        </td>
+      </tr>
+      <tr>
+        <td>
+          466388906
+        </td>
+        <td>
+          10
+        </td>
+      </tr>
+      <tr>
+        <td>
+          555010131
+        </td>
+        <td>
+          11
+        </td>
+      </tr>
+      <tr>
+        <td>
+          685744439
+        </td>
+        <td>
+          9
+        </td>
+      </tr>
+      <tr>
+        <td>
+          696335701
+        </td>
+        <td>
+          7
+        </td>
+      </tr>
+      <tr>
+        <td>
+          836826630
+        </td>
+        <td>
+          11
+        </td>
+      </tr>
+      <tr>
+        <td>
+          961874958
+        </td>
+        <td>
+          7
+        </td>
+      </tr>
+      <tr>
+        <td>
+          997111094
+        </td>
+        <td>
+          13
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT Classification, AVG(GPA) AS &quot;Average GPA&quot; FROM Student GROUP BY Classification;</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          Classification
+        </th>
+        <th>
+          Average GPA
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Freshman
+        </td>
+        <td>
+          3.2824
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Junior
+        </td>
+        <td>
+          3.24961538461538
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Senior
+        </td>
+        <td>
+          3.41125
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Sophomore
+        </td>
+        <td>
+          3.1504
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT CourseCode, COUNT(StudentID) As EnrollmentCount FROM Enrollment GROUP BY CourseCode ORDER BY EnrollmentCount ASC;</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          CourseCode
+        </th>
+        <th>
+          EnrollmentCount
+        </th>
+      </tr>
+      <tr>
+        <td>
+          CS363
+        </td>
+        <td>
+          17
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS331
+        </td>
+        <td>
+          18
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS461
+        </td>
+        <td>
+          19
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS511
+        </td>
+        <td>
+          19
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS227
+        </td>
+        <td>
+          29
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS228
+        </td>
+        <td>
+          31
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS309
+        </td>
+        <td>
+          31
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS352
+        </td>
+        <td>
+          32
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS311
+        </td>
+        <td>
+          33
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS321
+        </td>
+        <td>
+          34
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS330
+        </td>
+        <td>
+          34
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS342
+        </td>
+        <td>
+          37
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT DISTINCT s.StudentID, i.InstructorID FROM Enrollment e JOIN Student s ON s.StudentID=e.StudentID JOIN Instructor i ON i.InstructorID=s.MentorID JOIN Offering o ON o.CourseCode=e.CourseCode AND o.SectionNo=e.SectionNo WHERE s.MentorID=o.InstructorID;</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          StudentID
+        </th>
+        <th>
+          InstructorID
+        </th>
+      </tr>
+      <tr>
+        <td>
+          164500920
+        </td>
+        <td>
+          201586985
+        </td>
+      </tr>
+      <tr>
+        <td>
+          432180765
+        </td>
+        <td>
+          201586985
+        </td>
+      </tr>
+      <tr>
+        <td>
+          164776911
+        </td>
+        <td>
+          201586985
+        </td>
+      </tr>
+      <tr>
+        <td>
+          387215322
+        </td>
+        <td>
+          201586985
+        </td>
+      </tr>
+      <tr>
+        <td>
+          722131306
+        </td>
+        <td>
+          201586985
+        </td>
+      </tr>
+      <tr>
+        <td>
+          895255243
+        </td>
+        <td>
+          201586985
+        </td>
+      </tr>
+      <tr>
+        <td>
+          131838016
+        </td>
+        <td>
+          386167477
+        </td>
+      </tr>
+      <tr>
+        <td>
+          185141262
+        </td>
+        <td>
+          386167477
+        </td>
+      </tr>
+      <tr>
+        <td>
+          332012037
+        </td>
+        <td>
+          386167477
+        </td>
+      </tr>
+      <tr>
+        <td>
+          812073765
+        </td>
+        <td>
+          386167477
+        </td>
+      </tr>
+      <tr>
+        <td>
+          273277984
+        </td>
+        <td>
+          386167477
+        </td>
+      </tr>
+      <tr>
+        <td>
+          867910658
+        </td>
+        <td>
+          386167477
+        </td>
+      </tr>
+      <tr>
+        <td>
+          743991555
+        </td>
+        <td>
+          463249547
+        </td>
+      </tr>
+      <tr>
+        <td>
+          980102825
+        </td>
+        <td>
+          463249547
+        </td>
+      </tr>
+      <tr>
+        <td>
+          191083779
+        </td>
+        <td>
+          685744439
+        </td>
+      </tr>
+      <tr>
+        <td>
+          513729696
+        </td>
+        <td>
+          685744439
+        </td>
+      </tr>
+      <tr>
+        <td>
+          260369148
+        </td>
+        <td>
+          696335701
+        </td>
+      </tr>
+      <tr>
+        <td>
+          382109560
+        </td>
+        <td>
+          696335701
+        </td>
+      </tr>
+      <tr>
+        <td>
+          500094214
+        </td>
+        <td>
+          696335701
+        </td>
+      </tr>
+      <tr>
+        <td>
+          550658107
+        </td>
+        <td>
+          696335701
+        </td>
+      </tr>
+      <tr>
+        <td>
+          252533260
+        </td>
+        <td>
+          696335701
+        </td>
+      </tr>
+      <tr>
+        <td>
+          279702622
+        </td>
+        <td>
+          836826630
+        </td>
+      </tr>
+      <tr>
+        <td>
+          406746417
+        </td>
+        <td>
+          836826630
+        </td>
+      </tr>
+      <tr>
+        <td>
+          495490053
+        </td>
+        <td>
+          836826630
+        </td>
+      </tr>
+      <tr>
+        <td>
+          467545237
+        </td>
+        <td>
+          961874958
+        </td>
+      </tr>
+      <tr>
+        <td>
+          124208644
+        </td>
+        <td>
+          997111094
+        </td>
+      </tr>
+      <tr>
+        <td>
+          737972250
+        </td>
+        <td>
+          997111094
+        </td>
+      </tr>
+      <tr>
+        <td>
+          504013895
+        </td>
+        <td>
+          997111094
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT s.StudentID, p.Name, s.CreditHours FROM Student s JOIN Person p ON p.ID=s.StudentID WHERE YEAR(p.DOB) &gt; 1976 AND s.Classification='Freshman' ;</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          StudentID
+        </th>
+        <th>
+          Name
+        </th>
+        <th>
+          CreditHours
+        </th>
+      </tr>
+      <tr>
+        <td>
+          490649143
+        </td>
+        <td>
+          Naseer Hussain
+        </td>
+        <td>
+          27
+        </td>
+      </tr>
+      <tr>
+        <td>
+          644488789
+        </td>
+        <td>
+          Dave Whatmore
+        </td>
+        <td>
+          24
+        </td>
+      </tr>
+      <tr>
+        <td>
+          905922853
+        </td>
+        <td>
+          Shaun Elliot
+        </td>
+        <td>
+          21
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;INSERT INTO Person (Name, ID, Address, DOB) VALUES ('Jason Briggs', &quot;480293439&quot;, &quot;215, North Hyland Avenu&quot;, DATE('1975-01-15'));</font></span><br>1 row affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;INSERT INTO Student (StudentID, Classification, GPA, MentorID, CreditHours) VALUES ('480293439','Junior',3.48, '201586985',75);</font></span><br>1 row affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;INSERT INTO Enrollment (CourseCode, SectionNo, StudentID, Grade) VALUES ('CS311', 2, '480293439', 'A');</font></span><br>1 row affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;INSERT INTO Enrollment (CourseCode, SectionNo, StudentID, Grade) VALUES ('CS330', 1, '480293439', 'A-');</font></span><br>1 row affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;SELECT * FROM Person P WHERE P.Name='Briggs Jason';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          ID
+        </th>
+        <th>
+          Address
+        </th>
+        <th>
+          DOB
+        </th>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT * FROM Student S WHERE S.StudentID='480293439';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          StudentID
+        </th>
+        <th>
+          Classification
+        </th>
+        <th>
+          GPA
+        </th>
+        <th>
+          MentorID
+        </th>
+        <th>
+          CreditHours
+        </th>
+      </tr>
+      <tr>
+        <td>
+          480293439
+        </td>
+        <td>
+          Junior
+        </td>
+        <td>
+          3.48
+        </td>
+        <td>
+          201586985
+        </td>
+        <td>
+          75
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT * FROM Enrollment E WHERE E.StudentID = '480293439';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          CourseCode
+        </th>
+        <th>
+          SectionNo
+        </th>
+        <th>
+          StudentID
+        </th>
+        <th>
+          Grade
+        </th>
+      </tr>
+      <tr>
+        <td>
+          CS311
+        </td>
+        <td>
+          2
+        </td>
+        <td>
+          480293439
+        </td>
+        <td>
+          A
+        </td>
+      </tr>
+      <tr>
+        <td>
+          CS330
+        </td>
+        <td>
+          1
+        </td>
+        <td>
+          480293439
+        </td>
+        <td>
+          A-
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;DELETE FROM Enrollment WHERE StudentID IN (SELECT s.StudentID FROM Student s WHERE s.GPA &lt; 0.5 );</font></span><br>8 rows affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;DELETE FROM Student WHERE GPA &lt; 0.5;</font></span><br>3 rows affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;SELECT * FROM Student S WHERE S.GPA &lt; 0.5;</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          StudentID
+        </th>
+        <th>
+          Classification
+        </th>
+        <th>
+          GPA
+        </th>
+        <th>
+          MentorID
+        </th>
+        <th>
+          CreditHours
+        </th>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Ricky Ponting';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          NAME
+        </th>
+        <th>
+          SALARY
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Ricky Ponting
+        </td>
+        <td>
+          120000
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Darren Lehmann';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          NAME
+        </th>
+        <th>
+          SALARY
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Darren Lehmann
+        </td>
+        <td>
+          80000
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;UPDATE Instructor set Salary = Salary * 1.1 Where InstructorID IN (SELECT InstructorID FROM  ( SELECT pi.Name, i.InstructorID,  COUNT(s.GPA) as StudentTotal FROM Student s JOIN Instructor i ON s.MentorID=i.InstructorID JOIN Person pi ON pi.ID=i.InstructorID JOIN Person ps on ps.ID=s.StudentID where s.GPA&gt;3.0 GROUP BY pi.Name  ) dt where dt.StudentTotal &gt;4 AND dt.Name IN ('Ricky Ponting','Darren Lehmann'));</font></span><br>2 rows affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Ricky Ponting';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          NAME
+        </th>
+        <th>
+          SALARY
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Ricky Ponting
+        </td>
+        <td>
+          132000
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Darren Lehmann';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          NAME
+        </th>
+        <th>
+          SALARY
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Darren Lehmann
+        </td>
+        <td>
+          88000
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;INSERT INTO Person (Name, ID, Address, DOB) VALUES ('Trevor Horns', &quot;000957303&quot;, &quot;23 Canberra Street&quot;, DATE('1964-11-23'));</font></span><br>1 row affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;Select * From Person P Where P.Name = 'Trevor Horns';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          ID
+        </th>
+        <th>
+          Address
+        </th>
+        <th>
+          DOB
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Trevor Horns
+        </td>
+        <td>
+          000957303
+        </td>
+        <td>
+          23 Canberra Street
+        </td>
+        <td>
+          1964-11-23
+        </td>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;Delete From Enrollment Where StudentID='636596145';</font></span><br>5 rows affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;Delete From Student Where StudentID='636596145';</font></span><br>1 row affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;Delete From Person Where ID='636596145';</font></span><br>1 row affected!
+<br><span><font color="blue" size="3pt">$MySQL:&gt;Select * From Person P Where P.Name = 'Jan Austin';</font></span><br></pre>
+    <table border="1">
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          ID
+        </th>
+        <th>
+          Address
+        </th>
+        <th>
+          DOB
+        </th>
+      </tr>
+    </table>
+    <br>
+    
+
+    <pre><span><font color="blue" size="3pt">$MySQL:&gt;disconnect;</font></span><br>The current SQL database has been disconnected.</pre>
+  </body>
+</html>

@@ -1,0 +1,245 @@
+
+/*
+This Commands Pane is for creating, editing, and executing batches of commands. To get started, use the [Open] button to load a batch of commands from the Demo folder. 
+
+The Output Pane on the right is the default area where the output of a command is displayed. The pane is an html browser where text, html documents, and images can be displayed. Alternatively, in some cases the outputs can be saved to files or displayed in popup windows. 
+*/
+
+$MySQL:>connect;
+
+/*
+$MySQL:>DROP TABLE Enrollment;
+$MySQL:>DROP TABLE Offering;
+$MySQL:>DROP TABLE Course;
+$MySQL:>DROP TABLE Student;
+$MySQL:>DROP TABLE Instructor;
+$MySQL:>DROP TABLE Person;
+*/
+
+/*
+#####################################################################
+#ITEM 1 Person (Name, ID, Address, DOB) 
+#####################################################################
+*/
+
+$MySQL:>CREATE TABLE Person 
+(
+ Name CHAR (20),
+ ID CHAR (9) NOT NULL,
+ Address CHAR (30),
+ DOB DATE,
+ PRIMARY KEY (ID)
+)ENGINE=InnoDB;
+
+/*
+#####################################################################
+#ITEM 2 Instructor (InstructorID, Rank, Salary) 
+#####################################################################
+*/
+$MySQL:>CREATE TABLE Instructor
+(
+ InstructorID CHAR (9) NOT NULL,
+ Rank CHAR (12),
+ Salary INT,
+ PRIMARY KEY (InstructorID),
+ FOREIGN KEY (InstructorID) REFERENCES Person(ID)
+)ENGINE=InnoDB;
+
+/*
+#####################################################################
+#ITEM 3 Student (StudentID, Classification, GPA, MentorID, CreditHours) 
+#####################################################################
+*/
+$MySQL:>CREATE TABLE Student 
+(
+ StudentID CHAR (9) NOT NULL,
+ Classification CHAR (10),
+ GPA DOUBLE,
+ MentorID CHAR (9),
+ CreditHours INT,
+ PRIMARY KEY (StudentID),
+ FOREIGN KEY (StudentID) REFERENCES Person(ID),
+ FOREIGN KEY (MentorID) REFERENCES Instructor(InstructorID)
+)ENGINE=InnoDB;
+
+/*
+#####################################################################
+#ITEM 4 Course (CourseCode, CourseName, PreReq) 
+#####################################################################
+*/
+$MySQL:>CREATE TABLE Course 
+(
+ CourseCode CHAR (6) NOT NULL,
+ CourseName CHAR (50),
+ PreReq CHAR (6) DEFAULT 'None',
+ PRIMARY KEY (CourseCode, PreReq)
+)ENGINE=InnoDB;
+
+/*
+#####################################################################
+#Item 5 Offering (CourseCode, SectionNo, InstructorID)
+#####################################################################
+*/
+$MySQL:>CREATE TABLE Offering
+(
+ CourseCode CHAR (6) NOT NULL,
+ SectionNo INT NOT NULL,
+ InstructorID CHAR (9) NOT NULL,
+ PRIMARY KEY (CourseCode, SectionNo),
+ FOREIGN KEY (CourseCode) REFERENCES Course(CourseCode),
+ FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)
+)ENGINE=InnoDB;
+
+/*
+#####################################################################
+#Item 6 Enrollment (CourseCode, SectionNo, StudentID, Grade) 
+#####################################################################
+*/
+$MySQL:>CREATE TABLE Enrollment
+(
+ CourseCode CHAR (6) NOT NULL,
+ SectionNo INT NOT NULL,
+ StudentID CHAR (9) NOT NULL,
+ Grade CHAR (4) NOT NULL,
+ PRIMARY KEY (CourseCode, StudentID),
+ FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+ FOREIGN KEY (CourseCode, SectionNo) REFERENCES Offering(CourseCode, SectionNo)
+)ENGINE=InnoDB;
+
+/*#####################################################################
+######     Items 7 - 12   ###########################################
+*/
+
+$MySQL:> load | Person | ComS363/Projects/Datasets/University_Dataset.xml;
+$MySQL:> load | Instructor | ComS363/Projects/Datasets/University_Dataset.xml;
+$MySQL:> load | Student | ComS363/Projects/Datasets/University_Dataset.xml;
+$MySQL:> load | Course | ComS363/Projects/Datasets/University_Dataset.xml;
+$MySQL:> load | Offering | ComS363/Projects/Datasets/University_Dataset.xml;
+$MySQL:> load | Enrollment | ComS363/Projects/Datasets/University_Dataset.xml;
+
+$MySQL:>SHOW TABLES;
+
+
+/* Item 13 List the IDs of students and the IDs of their Mentors for students who are junior or senior having a GPA above 3.8. */
+$MySQL:>SELECT StudentID, MentorID FROM Student WHERE GPA > 3.8 AND Classification IN('Junior','Senior');
+
+/*Item 14. List the distinct course codes and sections for courses that are being taken by sophomore. */
+$MySQL:>SELECT DISTINCT e.CourseCode, e.SectionNo FROM Enrollment e JOIN Student s ON e.StudentId=s.StudentId WHERE s.Classification='Sophomore';
+
+/*Item 15. List the name and salary for mentors of all freshmen. */
+$MySQL:>SELECT DISTINCT p.Name, i.Salary FROM Person p JOIN Instructor i ON p.ID=i.InstructorID JOIN Student s ON s.MentorID=i.InstructorID WHERE s.Classification='Freshman'; 
+
+/*Item 16. Find the total salary of all instructors who are not offering any course.*/
+$MySQL:>SELECT SUM(i.Salary) FROM Instructor i LEFT JOIN Offering o ON i.InstructorID=o.InstructorID WHERE SectionNo IS NULL;
+
+/*Item 17. List all the names and DOBs of students who were born in 1976. The expression "Year(x.DOB) = 1976", checks if x is born in the year 1976. */
+$MySQL:>SELECT Name, DOB FROM Person WHERE Year(Person.DOB) = 1976;
+
+/*Item 18. List the names and rank of instructors who neither offer a course nor mentor a student.*/
+$MySQL:>(SELECT i.InstructorID FROM Instructor i WHERE i.InstructorID NOT IN (SELECT s.MentorID FROM Student s)) UNION ( SELECT i.InstructorID FROM Instructor i WHERE i.InstructorID NOT IN (SELECT o.InstructorID FROM Offering o) );
+
+/*Item 19. Find the IDs, names and DOB of the youngest student(s).*/
+$MySQL:>SELECT p.ID, p.Name, p.DOB FROM Person p WHERE p.ID IN (SELECT s.StudentID FROM Student s) ORDER BY p.DOB DESC;
+
+/*Item 20. List the IDs, DOB, and Names of Persons who are neither a student nor a instructor.*/
+$MySQL:>SELECT p.ID FROM Person p WHERE p.ID NOT IN (SELECT i.InstructorID AS ID FROM Instructor i) AND p.ID NOT IN (SELECT s.StudentID AS ID FROM Student s);
+
+/*Item 21. For each instructor list his / her name and the number of students he / she mentors.*/
+$MySQL:>SELECT i.InstructorID, COUNT(s.MentorID) AS numberOfMentees FROM (Instructor i INNER JOIN Student s ON i.InstructorID=s.MentorID) GROUP BY s.MentorID HAVING COUNT(s.MentorID)>0;
+
+/*Item 22. List the number of students and average GPA for each classification. Your query should not use constants such as "Freshman".*/
+$MySQL:>SELECT Classification, AVG(GPA) AS "Average GPA" FROM Student GROUP BY Classification;
+
+/*Item 23. Report the course(s) with lowest enrollments. You should output the course code and the number of enrollments. */
+$MySQL:>SELECT CourseCode, COUNT(StudentID) As EnrollmentCount FROM Enrollment GROUP BY CourseCode ORDER BY EnrollmentCount ASC;
+
+/*Item 24. List the IDs and Mentor IDs of students who are taking some course, offered by their mentor. */
+$MySQL:>SELECT DISTINCT s.StudentID, i.InstructorID FROM Enrollment e JOIN Student s ON s.StudentID=e.StudentID JOIN Instructor i ON i.InstructorID=s.MentorID JOIN Offering o ON o.CourseCode=e.CourseCode AND o.SectionNo=e.SectionNo WHERE s.MentorID=o.InstructorID;
+
+/*Item 25. List the student id, name, and completed credit hours of all freshman born in or after 1976. */
+$MySQL:>SELECT s.StudentID, p.Name, s.CreditHours FROM Student s JOIN Person p ON p.ID=s.StudentID WHERE YEAR(p.DOB) > 1976 AND s.Classification='Freshman' ;
+
+/*
+Item 26. 
+Insert following information in the database:
+Student name: Briggs Jason
+ID: 480293439
+address: 215, North Hyland Avenue
+DOB: 15th January 1975
+Junior
+GPA 3.48
+75 credit hours
+MentorID= InstructorID 201586985
+2 courses CS311 Section 2 and CS330 Section 1.
+He has an A in CS311 and an A- in CS330.
+*/
+
+$MySQL:>INSERT INTO Person (Name, ID, Address, DOB) VALUES ('Jason Briggs', "480293439", "215, North Hyland Avenu", DATE('1975-01-15'));
+$MySQL:>INSERT INTO Student (StudentID, Classification, GPA, MentorID, CreditHours) VALUES ('480293439','Junior',3.48, '201586985',75);
+$MySQL:>INSERT INTO Enrollment (CourseCode, SectionNo, StudentID, Grade) VALUES ('CS311', 2, '480293439', 'A');
+$MySQL:>INSERT INTO Enrollment (CourseCode, SectionNo, StudentID, Grade) VALUES ('CS330', 1, '480293439', 'A-');
+
+$MySQL:>SELECT * FROM Person P WHERE P.Name='Briggs Jason';
+$MySQL:>SELECT * FROM Student S WHERE S.StudentID='480293439';
+$MySQL:>SELECT * FROM Enrollment E WHERE E.StudentID = '480293439';
+
+/*Item 27. Next, delete the records of students from the database who have a GPA less than 0.5. Note that it is not sufficient to delete these records from Student table; you have to delete them from the Enrollment table first. (Why?) On the  other hand, do not delete these students from the Person table.*/
+$MySQL:>DELETE FROM Enrollment WHERE StudentID IN (SELECT s.StudentID FROM Student s WHERE s.GPA < 0.5 );
+$MySQL:>DELETE FROM Student WHERE GPA < 0.5;
+
+$MySQL:>SELECT * FROM Student S WHERE S.GPA < 0.5;
+
+/*
+Item 28. In this part you update the Instructor table.
+To confirm the update, you execute two queries before and after making the update.
+First, execute the SQL query statements that are given below.
+*/
+
+$MySQL:>SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Ricky Ponting';
+$MySQL:>SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Darren Lehmann';
+
+/*
+Item 28 cont.
+For instructors, Ricky Ponting and Darren Lehmann, 
+If they have five or more students whose GPA is greater than 3.0, then raise their Salary by 10%
+*/
+
+$MySQL:>UPDATE Instructor set Salary = Salary * 1.1 Where InstructorID IN (SELECT InstructorID FROM  ( SELECT pi.Name, i.InstructorID,  COUNT(s.GPA) as StudentTotal FROM Student s JOIN Instructor i ON s.MentorID=i.InstructorID JOIN Person pi ON pi.ID=i.InstructorID JOIN Person ps on ps.ID=s.StudentID where s.GPA>3.0 GROUP BY pi.Name  ) dt where dt.StudentTotal >4 AND dt.Name IN ('Ricky Ponting','Darren Lehmann'));
+
+$MySQL:>SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Ricky Ponting';
+$MySQL:>SELECT P.NAME, I.SALARY FROM Instructor I, Person P WHERE I.InstructorID = P.ID AND P.Name = 'Darren Lehmann';
+
+
+/*
+Item 29.
+Insert the following information into the Person table. 
+Name: Trevor Horns
+ID: 000957303
+Address: 23 Canberra Street
+DOB: 23rd November 1964. 
+*/
+
+$MySQL:>INSERT INTO Person (Name, ID, Address, DOB) VALUES ('Trevor Horns', "000957303", "23 Canberra Street", DATE('1964-11-23'));
+
+
+/*Item 29 cont.*/
+/* Then execute the following query:*/
+$MySQL:>Select * From Person P Where P.Name = 'Trevor Horns';
+
+
+
+/*
+Item 30
+Delete the record for Jan Austin from the Person table.
+If she is a student or an instructor, you should do the deletion with usual care. 
+*/
+
+$MySQL:>Delete From Enrollment Where StudentID='636596145';
+$MySQL:>Delete From Student Where StudentID='636596145';
+$MySQL:>Delete From Person Where ID='636596145';
+
+/*Item 30 Cont*/
+/*Then execute the following query:*/
+$MySQL:>Select * From Person P Where P.Name = 'Jan Austin';
+
+$MySQL:>disconnect;
