@@ -1,0 +1,62 @@
+James Tappe
+
+# Item 1
+
+match (t:Tweet) where t.retweeted  = false return t.retweet_count as Count order by Count desc Limit 10;
+
+
+
+# Item 2
+# Show top 10 hashtags that travel the most number of states along with the number of states.
+
+match (c:State)<-[:FROM]-(t:Tweet)<-[:TAGGED]-(h:Hashtag) return (count(distinct(c.name))) AS Longest_Path,h.name AS Hashtag order by Longest_Path desc limit 10;
+
+
+
+
+# Item 3
+# Show the longest path i.e. the number of states that "football" hashtag travels within a given time period. The time period in ms is given to be from 1351798658000 (use ">") to 1428987471269 (use "<". 
+
+match (c:State)<-[:FROM]-(t:Tweet)<-[:TAGGED]-(h:Hashtag) where t.created_at > 1351798658000 AND t.created_at < 1428987471269 return  (count(distinct(c.name))) AS Longest_Path, h.name  AS Hashtag order by Longest_Path desc limit 10;
+
+
+# Item 4
+# Show tweet text and retweet count of the most retweeted tweet for a hashtag "football" and the state "NY" where it was posted originally.
+
+match (s:State)<-[:FROM]-(t:Tweet)<-[:TAGGED]-(h:Hashtag) where h.name = "football" AND s.name = "NY" return t.text as Tweet_Text, t.retweet_count as Retweet_Count order by Retweet_Count desc limit 22;
+
+
+# Item 5. 
+# Show users and their location, which have used hashtags "football" as well as "Statesmen" in their tweets.
+
+match (h1:Hashtag)-[:TAGGED]->(t:Tweet) where h1.name = "football" with t
+match (h2:Hashtag)-[:TAGGED]->(t)<-[:POSTED]-(u:User) where h2.name = "Statesmen" 
+return u.name AS Name,u.location AS Location;
+
+# Item 6.
+# Show top 3 platforms/source used for tweeting of a "football" hashtag.
+
+match (h:Hashtag)-[:TAGGED]->(t:Tweet) where h.name = "football" with t match (t)-[:USING]->(s:Source) return distinct(s.name) AS sourceName, (count(s.name)) as theCount order by theCount desc limit 3;
+
+
+# Item 7.
+# Show top 10 tweeting user for "football" hashtag.
+
+match (h:Hashtag)-[:TAGGED]->(t)<-[:POSTED]-(u:User) where h.name = "football" and t.retweeted = false return count(t) AS Count,u.name AS User order by Count desc Limit 10;
+
+
+
+# Item 8. 
+# Show the verified users for "bleedblue" hashtag.
+
+match (u:User)-[:POSTED]->(t:Tweet)<-[:TAGGED]-(h:Hashtag) where h.name = "bleedblue" AND u.verified=true return distinct(u.name) AS User;
+
+
+
+
+
+
+
+
+
+

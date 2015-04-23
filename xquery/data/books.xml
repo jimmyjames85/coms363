@@ -33,5 +33,22 @@
     <year>2003</year>
     <price>39.95</price>
   </book>
+
+
+  <book category="WEB">
+    <title lang="sp">Espanol</title>
+    <author>Senorita Chang</author>
+    <year>2003</year>
+    <price>39.95</price>
+  </book>
+
+
+  <book category="WEB">
+    <title lang="de">Deustch</title>
+    <author>Fraulein Hoffschreiber</author>
+    <year>2003</year>
+    <price>39.95</price>
+  </book>
+
   
 </bookstore>

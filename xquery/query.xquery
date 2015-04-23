@@ -150,12 +150,46 @@ return <Classification type="{$c}">
 }
 </Students>
 :)
-<NS>
-{
-	for $e in doc("data/PersonnelOODB.xml")//Emp
-	return <h>{id($e/ISA/@oID)}</h>
-}
-</NS>
-(::)
 
-(: http://www.w3.org/TR/xquery/#id-for-let :)
+
+(:
+<bib>
+{
+	for $book in doc("data/books.xml")//book
+	let $authors := $book/author
+	return 
+	<book>
+		<authors>
+		{
+			for $author in $authors
+			return $author
+		}
+		</authors>
+		{$book/title}
+		{$book/year}
+		{$book/price}
+	</book>
+}
+</bib>
+
+:)
+
+
+
+
+
+<em>
+{
+let $books := doc("data/books.xml")//book
+let $lang := distinct-values($books/title/@lang)
+
+for $ulang in $lang
+return 
+<language type="{$ulang}">
+{	  
+	  for $b in $books[title/@lang=$ulang]
+	  return $b
+}
+</language>
+}
+</em>
